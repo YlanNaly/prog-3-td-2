@@ -18,16 +18,20 @@ public class GoalValidator implements Consumer<PlayerScorer> {
     if (playerScorer.getScoreTime() == null) {
       exceptionBuilder.append("Score minute is mandatory.");
     }
-    if (playerScorer.getScoreTime() < 0) {
-      exceptionBuilder.append("Player#")
-          .append(playerScorer.getPlayer().getId())
-          .append(" cannot score before before minute 0.");
+
+    else{
+      if (playerScorer.getScoreTime() < 0) {
+        exceptionBuilder.append("Player#")
+                .append(playerScorer.getPlayer().getId())
+                .append(" cannot score before before minute 0.");
+      }
+      if (playerScorer.getScoreTime() > 90) {
+        exceptionBuilder.append("Player#")
+                .append(playerScorer.getPlayer().getName())
+                .append(" cannot score before after minute 90.");
+      }
     }
-    if (playerScorer.getScoreTime() > 90) {
-      exceptionBuilder.append("Player#")
-          .append(playerScorer.getPlayer().getName())
-          .append(" cannot score before after minute 90.");
-    }
+
     if (!exceptionBuilder.isEmpty()) {
       throw new RuntimeException(exceptionBuilder.toString());
     }

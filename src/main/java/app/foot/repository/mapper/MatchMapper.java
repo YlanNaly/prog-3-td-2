@@ -24,16 +24,16 @@ public class MatchMapper {
                 .id(matchEntity.getId())
                 .datetime(matchEntity.getDatetime())
                 .stadium(matchEntity.getStadium())
-                .teamA(TeamMatch.builder()
+                .teamA(matchEntity.getTeamA() != null ?  TeamMatch.builder()
                         .team(teamMapper.toDomain(matchEntity.getTeamA()))
                         .scorers(teamAScorers)
                         .score(teamAScorers.size())
-                        .build())
-                .teamB(TeamMatch.builder()
+                        .build() : null)
+                .teamB(matchEntity.getTeamA() != null ? TeamMatch.builder()
                         .team(teamMapper.toDomain(matchEntity.getTeamB()))
                         .scorers(teamBScorers)
                         .score(teamBScorers.size())
-                        .build())
+                        .build() : null)
                 .build();
     }
 

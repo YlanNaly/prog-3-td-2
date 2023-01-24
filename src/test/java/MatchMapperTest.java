@@ -1,4 +1,8 @@
-import app.foot.model.*;
+import app.foot.model.Match;
+import app.foot.model.Player;
+import app.foot.model.PlayerScorer;
+import app.foot.model.Team;
+import app.foot.model.TeamMatch;
 import app.foot.repository.entity.MatchEntity;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
@@ -12,9 +16,9 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 @Slf4j
 public class MatchMapperTest {
     TeamMapper teamMapper = mock(TeamMapper.class);
@@ -23,6 +27,10 @@ public class MatchMapperTest {
 
     @Test
     void to_domain_ok() {
+        when(teamMapper.toDomain(any())).thenReturn(Team.builder().build());
+        when(playerMapper.toDomain((PlayerScoreEntity) any())).thenReturn(PlayerScorer.builder().build());
+        when(playerMapper.toDomain((PlayerEntity) any())).thenReturn(Player.builder().build());
+
         PlayerScorer scorer = rakotoModelScorer(
                 playerModelRakoto(playerEntityRakoto(teamBarea())),
                 scorerRakoto(playerEntityRakoto(teamBarea())));
@@ -42,8 +50,8 @@ public class MatchMapperTest {
                         .scorers(List.of())
                         .build())
                 .build();
-
         Match actual = subject.toDomain(MatchEntity.builder()
+                .scorers(List.of())
                 .teamA(teamBarea())
                 .teamB(teamGhana())
                 .scorers(List.of(scorerRakoto(playerEntityRakoto(teamBarea()))))
@@ -51,7 +59,6 @@ public class MatchMapperTest {
 
         assertEquals(expected, actual);
     }
-
     private static PlayerScorer rakotoModelScorer(Player playerModelRakoto, PlayerScoreEntity scorerRakoto) {
         return PlayerScorer.builder()
                 .player(playerModelRakoto)
@@ -112,4 +119,5 @@ public class MatchMapperTest {
                 .name("Barea")
                 .build();
     }
+
 }

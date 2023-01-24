@@ -8,6 +8,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Data
 @Builder
+@Setter
 @EqualsAndHashCode
 @ToString
 public class Match {
