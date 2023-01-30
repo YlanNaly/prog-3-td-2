@@ -22,9 +22,8 @@ public class TestUtils {
     }
 
     public static PlayerScorer nullScoreTimeScorer() {
-        return scorer1().toBuilder()
-                .scoreTime(null)
-                .build();
+        scorer1().setScoreTime(null);
+        return scorer1();
     }
 
     public static Player player1() {

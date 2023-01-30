@@ -7,16 +7,11 @@ import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.entity.TeamEntity;
 import app.foot.exception.BadRequestException;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 //TODO-1: complete these tests
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static utils.TestUtils.*;
 
 public class GoalValidatorTest {
@@ -122,12 +117,11 @@ public class GoalValidatorTest {
 
     @Test
     void when_guardian_throws_exception() {
+        scorer1().setPlayer(player1().toBuilder()
+                        .isGuardian(true)
+                        .build());
         assertThrows(RuntimeException.class, () -> subject.accept(
-                scorer1().toBuilder()
-                        .player(player1().toBuilder()
-                                .isGuardian(true)
-                                .build())
-                        .build()));
+                scorer1()));
         PlayerScoreEntity playerScorerEntity = scorerOne(playerOne());
 
         PlayerScorer playerScorer = secondModelScorer(guardianScorer(playerScorerEntity),playerScorerEntity);
@@ -144,10 +138,9 @@ public class GoalValidatorTest {
 
     @Test
     void when_score_time_greater_than_90_throws_exception() {
+        scorer1().setScoreTime(91);
         assertThrows(RuntimeException.class, () -> subject.accept(
-                scorer1().toBuilder()
-                        .scoreTime(91)
-                        .build()));
+                scorer1()));
         PlayerScorer playerScorer = playerScoringIn90();
 
         exceptionBuilder.append("Player#")
@@ -162,6 +155,7 @@ public class GoalValidatorTest {
     @Test
     void when_score_time_less_than_0_throws_exception() {
         PlayerScorer playerScorer = playerScoringInLess0();
+        scorer1().setScoreTime(-1);
 
         exceptionBuilder.append("Player#")
                 .append(playerScorer.getPlayer().getId())
@@ -171,9 +165,7 @@ public class GoalValidatorTest {
 
         assertEquals(exceptionBuilder.toString() , error.getMessage());
         assertThrows(RuntimeException.class, () -> subject.accept(
-                scorer1().toBuilder()
-                        .scoreTime(-1)
-                        .build()));
+                scorer1()));
     }
 
 
