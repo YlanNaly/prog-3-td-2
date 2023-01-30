@@ -3,6 +3,9 @@ import app.foot.model.Player;
 import app.foot.model.PlayerScorer;
 import app.foot.model.Team;
 import app.foot.model.TeamMatch;
+import app.foot.model.Match;
+import app.foot.model.PlayerScorer;
+import app.foot.model.TeamMatch;
 import app.foot.repository.entity.MatchEntity;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
@@ -19,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static utils.TestUtils.*;
+
 @Slf4j
 public class MatchMapperTest {
     TeamMapper teamMapper = mock(TeamMapper.class);

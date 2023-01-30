@@ -5,6 +5,7 @@ import app.foot.repository.entity.MatchEntity;
 import app.foot.repository.entity.PlayerEntity;
 import app.foot.repository.entity.PlayerScoreEntity;
 import app.foot.repository.entity.TeamEntity;
+import app.foot.exception.BadRequestException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -14,6 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 //TODO-1: complete these tests
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static utils.TestUtils.*;
+
 public class GoalValidatorTest {
 
     GoalValidator subject = new GoalValidator();
@@ -93,6 +98,7 @@ public class GoalValidatorTest {
     }
     @Test
     void accept_ok() {
+        assertDoesNotThrow(() -> subject.accept(scorer1()));
 
         PlayerScoreEntity playerScorerEntity = scorerOne(playerOne());
         PlayerScorer actual = secondModelScorer(playerScorer(playerScorerEntity),playerScorerEntity);
@@ -104,6 +110,8 @@ public class GoalValidatorTest {
     //Mandatory attributes not provided : scoreTime
     @Test
     void accept_ko() {
+        assertThrowsExceptionMessage("400 BAD_REQUEST : Score minute is mandatory.",
+                BadRequestException.class, () -> subject.accept(nullScoreTimeScorer()));
 
         exceptionBuilder.append("Score minute is mandatory.");
 
@@ -114,6 +122,12 @@ public class GoalValidatorTest {
 
     @Test
     void when_guardian_throws_exception() {
+        assertThrows(RuntimeException.class, () -> subject.accept(
+                scorer1().toBuilder()
+                        .player(player1().toBuilder()
+                                .isGuardian(true)
+                                .build())
+                        .build()));
         PlayerScoreEntity playerScorerEntity = scorerOne(playerOne());
 
         PlayerScorer playerScorer = secondModelScorer(guardianScorer(playerScorerEntity),playerScorerEntity);
@@ -130,6 +144,10 @@ public class GoalValidatorTest {
 
     @Test
     void when_score_time_greater_than_90_throws_exception() {
+        assertThrows(RuntimeException.class, () -> subject.accept(
+                scorer1().toBuilder()
+                        .scoreTime(91)
+                        .build()));
         PlayerScorer playerScorer = playerScoringIn90();
 
         exceptionBuilder.append("Player#")
@@ -152,6 +170,10 @@ public class GoalValidatorTest {
         RuntimeException error = assertThrows(RuntimeException.class , () -> subject.accept(playerScorer));
 
         assertEquals(exceptionBuilder.toString() , error.getMessage());
+        assertThrows(RuntimeException.class, () -> subject.accept(
+                scorer1().toBuilder()
+                        .scoreTime(-1)
+                        .build()));
     }
 
 
