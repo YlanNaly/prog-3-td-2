@@ -20,12 +20,24 @@ public class TestUtils {
                 .scoreTime(10)
                 .build();
     }
-
+    public static PlayerScorer less_than_O() {
+        scorer1().setScoreTime(-1);
+        return scorer1();
+    }
+    public static PlayerScorer guardian_throws_exception() {
+        scorer1().setPlayer(Player.builder()
+                        .isGuardian(true)
+                .build());
+        return scorer1();
+    }
+    public static PlayerScorer score_time_greater_than_90_throws_exception() {
+        scorer1().setScoreTime(91);
+        return scorer1();
+    }
     public static PlayerScorer nullScoreTimeScorer() {
         scorer1().setScoreTime(null);
         return scorer1();
     }
-
     public static Player player1() {
         return Player.builder()
                 .id(1)

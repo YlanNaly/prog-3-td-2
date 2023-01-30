@@ -30,7 +30,13 @@ public class MatchController {
         .map(mapper::toRest)
         .toList();
   }
-
+  @GetMapping("/matches/{id}")
+  public Match getMatchesById(
+          @PathVariable int id
+  ) {
+    app.foot.model.Match match = service.getMatchById(id);
+    return mapper.toRest(match);
+  }
   @PostMapping("/matches/{matchId}/goals")
   public Match addGoals(@PathVariable int matchId, @RequestBody List<PlayerScorer> scorers) {
     scorers.forEach(validator);

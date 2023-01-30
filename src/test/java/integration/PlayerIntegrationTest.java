@@ -54,13 +54,13 @@ class PlayerIntegrationTest {
     @Test
     void read_players_ok() throws Exception {
         MockHttpServletResponse response = mockMvc
-                .perform(get("/players"))
+                .perform(get("/players").accept("application/json"))
                 .andReturn()
                 .getResponse();
         List<Player> actual = convertFromHttpResponse(response);
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(9, actual.size());
+        assertEquals(11, actual.size());
         assertTrue(actual.containsAll(List.of(
                 player1(),
                 player2(),

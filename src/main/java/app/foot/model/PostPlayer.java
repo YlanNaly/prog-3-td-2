@@ -1,4 +1,4 @@
-package app.foot.controller.rest;
+package app.foot.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,8 +13,8 @@ import lombok.ToString;
 @Builder
 @ToString
 @EqualsAndHashCode
-
-public class Team {
-  private Integer id;
+public class PostPlayer {
   private String name;
+  private Boolean isGuardian;
+  private Integer team;
 }
