@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,9 +40,13 @@ public class PlayerService {
 
     public List<Player> createPlayers(List<Player> toCreate) {
         return repository.saveAll(toCreate.stream()
-                        .map(mapper::toEntity)
-                        .collect(Collectors.toUnmodifiableList())).stream()
-                .map(mapper::toDomain)
-                .collect(Collectors.toUnmodifiableList());
+                        .map(mapper::toEntity).toList()).stream()
+                .map(mapper::toDomain).toList();
+    }
+
+    public List<Player> changePlayer(List<Player> toChange) {
+        return repository.saveAll(toChange.stream()
+                        .map(mapper::toEntity).toList()).stream()
+                .map(mapper::toDomain).toList();
     }
 }

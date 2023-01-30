@@ -100,4 +100,10 @@ public class PlayerMapperTest {
                 .match(matchEntity1)
                 .build(), actual);
     }
+
+
+    @Test
+    void player_scorer_to_entity_ko() {
+
+    }
 }

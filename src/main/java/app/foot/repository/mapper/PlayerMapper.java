@@ -10,6 +10,9 @@ import app.foot.repository.entity.PlayerScoreEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 @AllArgsConstructor
 public class PlayerMapper {

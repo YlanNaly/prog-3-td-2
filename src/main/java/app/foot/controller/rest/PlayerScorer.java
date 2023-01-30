@@ -6,6 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Getter
+@Setter
 @EqualsAndHashCode
 @ToString
 public class PlayerScorer {

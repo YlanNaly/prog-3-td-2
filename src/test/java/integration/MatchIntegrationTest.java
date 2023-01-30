@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MatchIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
+
     private final ObjectMapper objectMapper = new ObjectMapper()
             .findAndRegisterModules();  //Allow 'java.time.Instant' mapping
 
@@ -85,6 +86,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(6)
                 .name("J6")
+                .teamName("E3")
                 .isGuardian(false)
                 .build();
     }
@@ -93,6 +95,7 @@ class MatchIntegrationTest {
         return Player.builder()
                 .id(3)
                 .name("J3")
+                .teamName("E2")
                 .isGuardian(false)
                 .build();
     }
