@@ -1,20 +1,13 @@
 package app.foot.controller.rest;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Getter
-@ToString
 @EqualsAndHashCode
-@Setter
+@ToString
 public class PlayerScorer {
   private Player player;
   private Integer scoreTime;

@@ -1,19 +1,13 @@
 package app.foot.controller.rest;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Builder
-@ToString
 @EqualsAndHashCode
-
+@ToString
 public class Team {
   private Integer id;
   private String name;

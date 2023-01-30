@@ -36,4 +36,12 @@ public class PlayerService {
     public TeamEntity getTeam(Integer id){
         return teamRepository.getById(id);
     }
+
+    public List<Player> createPlayers(List<Player> toCreate) {
+        return repository.saveAll(toCreate.stream()
+                        .map(mapper::toEntity)
+                        .collect(Collectors.toUnmodifiableList())).stream()
+                .map(mapper::toDomain)
+                .collect(Collectors.toUnmodifiableList());
+    }
 }
