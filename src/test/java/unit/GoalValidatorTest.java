@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-//TODO-1: complete these tests
+//TODO-1: complete these tests --DONE--
 public class GoalValidatorTest {
 
     GoalValidator subject = new GoalValidator();

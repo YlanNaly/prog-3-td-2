@@ -13,9 +13,11 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static utils.TestUtils.*;
@@ -30,7 +32,6 @@ public class PlayerMapperTest {
     private static PlayerEntity entityRakoto() {
         return playerEntityRakoto(teamBarea());
     }
-
 
     private static PlayerScorer rakotoScorer() {
         return rakotoModelScorer(
@@ -104,6 +105,28 @@ public class PlayerMapperTest {
 
     @Test
     void player_scorer_to_entity_ko() {
+        Instant now = Instant.now();
+        MatchEntity matchEntity1 = MatchEntity.builder()
+                .id(1)
+                .teamA(null)
+                .teamB(null)
+                .scorers(List.of())
+                .datetime(now)
+                .stadium("Mahamasina")
+                .build();
+        when(playerRepositoryMock.findById(1))
+                .thenReturn(Optional.of(playerEntityRakoto(teamBarea())));
+        when(matchRepositoryMock.findById(1))
+                .thenReturn(Optional.of(matchEntity1));
+        PlayerScorer actual = PlayerScorer.builder()
+                .player(Player.builder()
+                        .isGuardian(true)
+                        .name("jean")
+                        .build())
+                .minute(10)
+                .isOwnGoal(false)
+                .build();
 
+        assertThrows(NoSuchElementException.class , () -> subject.toEntity(matchEntity1.getId(),actual));
     }
 }
