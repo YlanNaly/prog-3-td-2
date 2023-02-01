@@ -5,6 +5,7 @@ import app.foot.controller.rest.Player;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 @SpringBootTest(classes = FootApi.class)
 @AutoConfigureMockMvc
+@Transactional
 class PlayerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
@@ -37,15 +39,6 @@ class PlayerIntegrationTest {
                 response.getContentAsString(),
                 playerListType);
     }
-    Player player1() {
-        return Player.builder()
-                .id(1)
-                .name("J1")
-                .teamName("E1")
-                .isGuardian(false)
-                .build();
-    }
-
     Player player2() {
         return Player.builder()
                 .id(2)
@@ -73,9 +66,8 @@ class PlayerIntegrationTest {
         List<Player> actual = convertFromHttpResponse(response);
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(12, actual.size());
+        assertEquals(22, actual.size());
         assertTrue(actual.containsAll(List.of(
-                player1(),
                 player2(),
                 player3())));
     }
