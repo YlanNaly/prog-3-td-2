@@ -173,32 +173,26 @@ public class PlayerMapperTest {
                 .isGuardian(false)
                 .teamName("Barea")
                 .build();
-     /*   Player player2 = Player.builder()
-                .id(1)
-                .name("Jean")
-                .teamName(null)
-                .isGuardian(false)
-                .build();
+
         TeamEntity team = TeamEntity.builder()
                 .name("Barea")
                 .id(1)
                 .build();
+
         PlayerEntity expected = PlayerEntity.builder()
                 .team(team)
                 .guardian(player.getIsGuardian())
                 .name(player.getName())
                 .id(player.getId())
                 .build();
-*/
+
         //WHEN
-        when(teamRepositoryMock.findByName(player.getTeamName())).thenReturn(TeamEntity.builder().build());
+        when(teamRepositoryMock.findByName(player.getTeamName())).thenReturn(null);
 
         //THEN
-        assertThrows(RuntimeException.class , () -> subject.toEntity(player));
-
-       /*  PlayerEntity actual = subject.toEntity(player2);
-       assertNotEquals(expected , actual);
+        PlayerEntity actual = subject.toEntity(player);
+        assertNotEquals(expected , actual);
         log.info(String.valueOf(actual));
-        log.info(String.valueOf(expected)); */
+        log.info(String.valueOf(expected));
     }
 }
