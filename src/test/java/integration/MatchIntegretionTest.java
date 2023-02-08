@@ -1,6 +1,7 @@
 package integration;
 
 import app.foot.FootApi;
+import app.foot.controller.BaseController;
 import app.foot.controller.rest.Match;
 import app.foot.controller.rest.Player;
 import app.foot.controller.rest.PlayerScorer;
