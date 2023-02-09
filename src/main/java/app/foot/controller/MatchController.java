@@ -5,15 +5,17 @@ import app.foot.controller.rest.PlayerScorer;
 import app.foot.controller.rest.mapper.MatchRestMapper;
 import app.foot.controller.rest.mapper.PlayerScorerRestMapper;
 import app.foot.controller.validator.GoalValidator;
+import app.foot.exception.ExceptionHandlerManager;
 import app.foot.service.MatchService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-public class MatchController extends BaseController {
+public class MatchController extends ExceptionHandlerManager {
     private final MatchService service;
     private final GoalValidator validator;
     private final MatchRestMapper mapper;

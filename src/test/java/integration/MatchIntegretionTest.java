@@ -12,6 +12,7 @@
   import com.fasterxml.jackson.databind.type.CollectionType;
   import jakarta.servlet.ServletException;
   import jakarta.transaction.Transactional;
+  import lombok.extern.slf4j.Slf4j;
   import org.junit.jupiter.api.Test;
   import org.springframework.beans.factory.annotation.Autowired;
   import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -37,6 +38,7 @@
   import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
   @SpringBootTest(classes = FootApi.class)
+  @Slf4j
   @AutoConfigureMockMvc
   @Transactional
   public class MatchIntegretionTest {
@@ -97,7 +99,6 @@
               .datetime(Instant.parse("2023-01-01T14:00:00Z"))
               .build();
     }
-
     private static TeamMatch teamMatchB() {
       return TeamMatch.builder()
               .team(team3())
@@ -122,7 +123,6 @@
                               .build()))
               .build();
     }
-
     private static Team team3() {
       return Team.builder()
               .id(3)
@@ -166,16 +166,7 @@
               .isOG(false)
               .build();
     }
-    private static PlayerScorer playerScoringInLess0(){
-      return PlayerScorer.builder()
-              .scoreTime(-1)
-              .player(Player.builder()
-                      .id(7)
-                      .isGuardian(true)
-                      .build())
-              .isOG(false)
-              .build();
-    }
+
     @Test
     void get_match_by_id_ok() throws Exception {
       MockHttpServletResponse response = mockMvc
@@ -186,6 +177,42 @@
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(match1(actual) ,actual);
     }
+    @Test
+    void read_matches_ok() throws Exception {
+      MockHttpServletResponse response = mockMvc.perform(get("/matches"))
+              .andExpect(status().isOk())
+              .andReturn()
+              .getResponse();
+      List<Match> actual = convertFromHttpResponseToList(response);
+      log.info(String.valueOf(actual.get(0)));
+      log.info(actual.get(1).toString());
+      assertEquals(3, actual.size());
+      assertTrue(actual.contains(expectedMatch2()));
+      // TODO: add these checks and its values
+      assertTrue(actual.contains(expectedMatch1(actual.get(0))));
+      assertTrue(actual.contains(expectedMatch3(actual.get(2))));
+
+    }
+    private Match expectedMatch1(Match match) {
+      return Match.builder()
+              .id(1)
+              .teamA(match.getTeamA())
+              .teamB(match.getTeamB())
+              .stadium(match.getStadium())
+              .datetime(match.getDatetime())
+              .build();
+    }
+
+    private Match expectedMatch3(Match match) {
+      return Match.builder()
+              .id(3)
+              .teamA(match.getTeamA())
+              .teamB(match.getTeamB())
+              .stadium(match.getStadium())
+              .datetime(match.getDatetime())
+              .build();
+    }
+
 
     @Test
     void get_match_by_id_ko() throws Exception {
@@ -213,29 +240,22 @@
     }
 
     @Test
-    void post_match_adding_goal_ko() throws Exception {
-      mockMvc.perform(post("/matches/"+3 +"/goals", exceptionBuilder.toString())
-               .content(List.of(playerScoringInLess0()).toString())
-               .contentType(MediaType.APPLICATION_JSON)
-               .accept(MediaType.APPLICATION_JSON))
-               .andExpect(status().isBadRequest())
-               .andExpect(result -> {
-                 result.getResponse();
-                 assertTrue(true);
-               });
-    }
-    @Test
-    void read_matches_ok() throws Exception {
-      MockHttpServletResponse response = mockMvc.perform(get("/matches"))
-              .andExpect(status().isOk())
+    void post_match_adding_goal_ko() {
+      assertThrows(ServletException.class , () -> mockMvc
+              .perform(post("/matches/"+3+"/goals")
+                      .content(objectMapper.writeValueAsString(List.of((
+                              PlayerScorer.builder()
+                                      .scoreTime(-100)
+                                      .player(Player.builder()
+                                              .id(7)
+                                              .isGuardian(true)
+                                              .build())
+                                      .isOG(false)
+                                      .build())
+                      )))
+                      .contentType("application/json")
+              )
               .andReturn()
-              .getResponse();
-      List<Match> actual = convertFromHttpResponseToList(response);
-
-      assertEquals(3, actual.size());
-      assertTrue(actual.contains(expectedMatch2()));
-      // TODO: add these checks and its values
-      //assertTrue(actual.contains(expectedMatch1()));
-      //assertTrue(actual.contains(expectedMatch3()));
+              .getResponse());
     }
   }
