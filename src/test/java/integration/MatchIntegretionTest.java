@@ -7,6 +7,7 @@
   import app.foot.controller.rest.Team;
   import app.foot.controller.rest.TeamMatch;
   import app.foot.controller.validator.GoalValidator;
+  import app.foot.exception.BadRequestException;
   import com.fasterxml.jackson.core.JsonProcessingException;
   import com.fasterxml.jackson.databind.ObjectMapper;
   import com.fasterxml.jackson.databind.type.CollectionType;
@@ -36,6 +37,7 @@
   import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
   import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
   import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+  import static utils.TestUtils.player1;
 
   @SpringBootTest(classes = FootApi.class)
   @Slf4j
@@ -241,21 +243,25 @@
 
     @Test
     void post_match_adding_goal_ko() {
-      assertThrows(ServletException.class , () -> mockMvc
-              .perform(post("/matches/"+3+"/goals")
-                      .content(objectMapper.writeValueAsString(List.of((
-                              PlayerScorer.builder()
-                                      .scoreTime(-100)
-                                      .player(Player.builder()
-                                              .id(7)
-                                              .isGuardian(true)
-                                              .build())
-                                      .isOG(false)
-                                      .build())
-                      )))
-                      .contentType("application/json")
-              )
-              .andReturn()
-              .getResponse());
+      int MATCH_ID = 3;
+      PlayerScorer toCreate = PlayerScorer.builder()
+              .player(player1())
+              .scoreTime(100)
+              .isOG(false)
+              .build();
+      ServletException exception = assertThrows(ServletException.class, () -> {
+        mockMvc
+                .perform(post("/matches/" + MATCH_ID + "/goals")
+                        .content(objectMapper.writeValueAsString(List.of(toCreate)))
+                        .contentType("application/json")
+                        .accept("application/json"))
+                .andReturn()
+                .getResponse();
+      });
+      assertEquals(BadRequestException.class, exception.getCause().getClass());
+      assertEquals(
+              "500 BAD_REQUEST : Player#J1 cannot score before after minute 90.",
+              exception.getCause().getMessage()
+      );
     }
   }
